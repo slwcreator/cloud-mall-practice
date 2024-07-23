@@ -10,6 +10,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>cloud-mall-eureka-server</module>
+        <module>cloud-mall-user</module>
+        <module>cloud-mall-common</module>
     </modules>
 
     <parent>
