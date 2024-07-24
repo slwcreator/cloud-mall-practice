@@ -9,10 +9,7 @@ import com.slwer.cloud.mall.practice.user.model.pojo.User;
 import com.slwer.cloud.mall.practice.user.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -102,5 +99,11 @@ public class UserController {
         } else {
             return ApiRestResponse.error(ImoocMallExceptionEnum.NEED_ADMIN);
         }
+    }
+
+    @PostMapping("/checkAdminRole")
+    @ResponseBody
+    public Boolean checkAdminRole(@RequestBody User user) {
+        return userService.checkAdminRole(user);
     }
 }
