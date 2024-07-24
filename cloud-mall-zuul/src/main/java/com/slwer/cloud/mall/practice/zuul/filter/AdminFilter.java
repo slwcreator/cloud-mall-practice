@@ -50,6 +50,7 @@ public class AdminFilter extends ZuulFilter {
         User currentUser = (User) session.getAttribute(Constant.IMOOC_MALL_USER);
         if (currentUser == null) {
             currentContext.setSendZuulResponse(false);
+            currentContext.getResponse().setContentType("application/json;charset=utf-8");
             currentContext.setResponseBody("{\n" +
                     "    \"status\": 10010,\n" +
                     "    \"msg\": \"用户未登录\",\n" +
@@ -63,6 +64,7 @@ public class AdminFilter extends ZuulFilter {
         Boolean adminRole = userFeignClient.checkAdminRole(currentUser);
         if (!adminRole) {
             currentContext.setSendZuulResponse(false);
+            currentContext.getResponse().setContentType("application/json;charset=utf-8");
             currentContext.setResponseBody("{\n" +
                     "    \"status\": 10011,\n" +
                     "    \"msg\": \"需要管理员权限\",\n" +

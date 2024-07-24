@@ -9,6 +9,7 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -45,6 +46,7 @@ public class UserFilter extends ZuulFilter {
         User currentUser = (User) session.getAttribute(Constant.IMOOC_MALL_USER);
         if (currentUser == null) {
             currentContext.setSendZuulResponse(false);
+            currentContext.getResponse().setContentType("application/json;charset=utf-8");
             currentContext.setResponseBody("{\n" +
                     "    \"status\": 10010,\n" +
                     "    \"msg\": \"用户未登录\",\n" +

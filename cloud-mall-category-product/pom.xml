@@ -49,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>com.slwer</groupId>
-            <artifactId>cloud-mall-common</artifactId>
+            <artifactId>cloud-mall-user</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

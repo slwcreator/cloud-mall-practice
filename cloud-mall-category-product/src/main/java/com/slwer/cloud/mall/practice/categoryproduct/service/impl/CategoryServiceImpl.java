@@ -11,6 +11,7 @@ import com.slwer.cloud.mall.practice.categoryproduct.service.CategoryService;
 import com.slwer.cloud.mall.practice.common.exception.ImoocMallException;
 import com.slwer.cloud.mall.practice.common.exception.ImoocMallExceptionEnum;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -81,6 +82,7 @@ public class CategoryServiceImpl implements CategoryService {
      * 递归查询得到分类目录数据（针对前台的）
      */
     @Override
+    @Cacheable(value = "listForCustomer")
     public List<CategoryVO> listForCustomer(Integer parentId) {
         //定义一个 List，这个 List 就用来存放最终的查询结果；即这个 List 中的直接元素是：所有的 parent_id=0，即type=1的，第1级别的目录；
         List<CategoryVO> categoryVOList = new ArrayList<>();
