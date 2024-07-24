@@ -56,7 +56,7 @@ public class ProductAdminController {
 
         createFile(file, fileDirectory, destFile);
         String address = uri;
-        return ApiRestResponse.success(scheme + address + "/images/" + newFileName);
+        return ApiRestResponse.success(scheme + address + "/category-product/images/" + newFileName);
     }
 
     private URI getHost(URI uri) {
@@ -124,7 +124,7 @@ public class ProductAdminController {
 
         createFile(file, fileDirectory, destFile);
         String address = uri;
-        return ApiRestResponse.success(scheme + address + "/images/" + newFileName);
+        return ApiRestResponse.success(scheme + address + "/category-product/images/" + newFileName);
     }
 
     private static void createFile(MultipartFile file, File fileDirectory, File destFile) {
