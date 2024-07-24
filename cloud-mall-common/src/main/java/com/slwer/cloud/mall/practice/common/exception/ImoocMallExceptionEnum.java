@@ -16,6 +16,8 @@ public enum ImoocMallExceptionEnum {
     UPDATE_FAILED(10009, "更新失败"),
     NEED_LOGIN(10010, "用户未登录"),
     NEED_ADMIN(10011, "无管理员权限"),
+    CREATE_FAILED(10012, "新增失败"),
+    DELETE_FAILED(10013, "删除失败"),
     SYSTEM_ERROR(20000, "系统异常");
 
     //异常码
