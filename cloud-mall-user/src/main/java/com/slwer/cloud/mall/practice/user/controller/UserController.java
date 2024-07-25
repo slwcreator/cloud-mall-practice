@@ -107,7 +107,7 @@ public class UserController {
         return userService.checkAdminRole(user);
     }
 
-    @PostMapping("/getUser")
+    @GetMapping("/getUser")
     @ResponseBody
     public User getUser(HttpSession session) {
         return (User) session.getAttribute(Constant.IMOOC_MALL_USER);
