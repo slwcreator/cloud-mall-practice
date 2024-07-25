@@ -7,6 +7,7 @@ import com.slwer.cloud.mall.practice.categoryproduct.service.ProductService;
 import com.slwer.cloud.mall.practice.common.common.ApiRestResponse;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,5 +42,10 @@ public class ProductController {
     @GetMapping("/product/detailForFeign")
     public Product detailForFeign(@RequestParam Integer id) {
         return productService.detail(id);
+    }
+
+    @PostMapping("/product/updateStock")
+    public void updateStock(@RequestParam Integer productId, @RequestParam Integer stock) {
+        productService.updateStock(productId, stock);
     }
 }

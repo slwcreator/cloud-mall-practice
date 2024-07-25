@@ -22,6 +22,13 @@ public enum ImoocMallExceptionEnum {
     UPLOAD_FAILED(10015, "文件上传失败"),
     NOT_SALE(10016, "商品状态不可售"),
     NOT_ENOUGH(10017, "商品库存不足"),
+    CART_EMPTY(10018, "购物车已勾选的商品为空"),
+    NO_ORDER(10019, "未找到对应的枚举"),
+    NOT_YOUR_ORDER(10020, "订单不属于你"),
+    CANCEL_WRONG_ORDER_STATUS(10033, "订单状态有误，付款后不支持取消订单"),
+    PAY_WRONG_ORDER_STATUS(10034, "订单状态有误，仅能在未付款时付款"),
+    DELIVER_WRONG_ORDER_STATUS(10035, "订单状态有误，仅能在付款后发货"),
+    FINISH_WRONG_ORDER_STATUS(10036, "订单状态有误，仅能在发货后完结订单"),
     SYSTEM_ERROR(20000, "系统异常");
 
     //异常码

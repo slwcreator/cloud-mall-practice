@@ -19,4 +19,6 @@ public interface ProductService {
     Product detail(Integer id);
 
     PageInfo<Product> list(ProductListReq productListReq);
+
+    void updateStock(Integer productId, Integer stock);
 }

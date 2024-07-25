@@ -18,7 +18,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,5 +139,13 @@ public class ProductServiceImpl implements ProductService {
                 getCategoryIds(categoryVO.getChildCategory(), categoryIds);
             }
         }
+    }
+
+    @Override
+    public void updateStock(Integer productId, Integer stock) {
+        Product product = new Product();
+        product.setId(productId);
+        product.setStock(stock);
+        productMapper.updateByPrimaryKeySelective(product);
     }
 }
