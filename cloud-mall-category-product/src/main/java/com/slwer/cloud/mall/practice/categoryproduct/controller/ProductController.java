@@ -37,4 +37,9 @@ public class ProductController {
         PageInfo<Product> pageInfo = productService.list(productListReq);
         return ApiRestResponse.success(pageInfo);
     }
+
+    @GetMapping("/product/detailForFeign")
+    public Product detailForFeign(@RequestParam Integer id) {
+        return productService.detail(id);
+    }
 }
