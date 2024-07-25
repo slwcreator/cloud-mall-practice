@@ -18,7 +18,6 @@ import com.slwer.cloud.mall.practice.cartorder.service.CartService;
 import com.slwer.cloud.mall.practice.cartorder.service.OrderService;
 import com.slwer.cloud.mall.practice.cartorder.util.OrderCodeFactory;
 import com.slwer.cloud.mall.practice.cartorder.util.PageUtils;
-import com.slwer.cloud.mall.practice.categoryproduct.common.ProductConstant;
 import com.slwer.cloud.mall.practice.categoryproduct.model.pojo.Product;
 import com.slwer.cloud.mall.practice.common.common.Constant;
 import com.slwer.cloud.mall.practice.common.exception.ImoocMallException;
@@ -57,6 +56,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     UserFeignClient userFeignClient;
+
+    @Value("${file.upload.dir}")
+    String FILE_UPLOAD_DIR;
 
     @Value("${file.upload.uri}")
     String uri;
@@ -249,13 +251,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String qrcode(String orderNo) {
         String address = uri;
-        String payUrl = scheme + address + "/pay?orderNo=" + orderNo;
+        String payUrl = scheme + address + "/cart-order/pay?orderNo=" + orderNo;
         try {
-            QRCodeGenerator.generateQRCode(payUrl, 350, 350, ProductConstant.FILE_UPLOAD_DIR + orderNo + ".png");
+            QRCodeGenerator.generateQRCode(payUrl, 350, 350, FILE_UPLOAD_DIR + orderNo + ".png");
         } catch (WriterException | IOException e) {
             throw new RuntimeException(e);
         }
-        return scheme + address + "/images/" + orderNo + ".png";
+        return scheme + address + "/cart-order/images/" + orderNo + ".png";
     }
 
     @Override
