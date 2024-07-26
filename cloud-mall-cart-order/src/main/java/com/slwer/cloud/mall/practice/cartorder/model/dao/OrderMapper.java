@@ -1,8 +1,10 @@
 package com.slwer.cloud.mall.practice.cartorder.model.dao;
 
 import com.slwer.cloud.mall.practice.cartorder.model.pojo.Order;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -24,4 +26,6 @@ public interface OrderMapper {
     List<Order> selectOrderForCustomer(Integer userId);
 
     List<Order> selectAllForAdmin();
+
+    List<Order> selectUnpaidOrders(@Param("begTime") Date begTime, @Param("endTime") Date endTime);
 }

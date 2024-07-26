@@ -23,6 +23,7 @@ import com.slwer.cloud.mall.practice.common.common.Constant;
 import com.slwer.cloud.mall.practice.common.exception.ImoocMallException;
 import com.slwer.cloud.mall.practice.common.exception.ImoocMallExceptionEnum;
 import com.slwer.cloud.mall.practice.common.util.QRCodeGenerator;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -229,16 +230,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void cancel(String orderNo) {
+    public void cancel(String orderNo, boolean isFromSystem) {
         Order order = orderMapper.selectByOrderNo(orderNo);
         if (order == null) {
             throw new ImoocMallException(ImoocMallExceptionEnum.NO_ORDER);
         }
         //订单存在还需要判断所属
-        Integer userId = userFeignClient.getUser().getId();
-        if (!order.getUserId().equals(userId)) {
-            throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
+        if (!isFromSystem) {
+            Integer userId = userFeignClient.getUser().getId();
+            if (!order.getUserId().equals(userId)) {
+                throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
+            }
         }
+
         if (order.getOrderStatus().equals(Constant.OrderStatusEnum.NOT_PAID.getCode())) {
             order.setOrderStatus(Constant.OrderStatusEnum.CANCELED.getCode());
             order.setEndTime(new Date());
@@ -329,5 +333,13 @@ public class OrderServiceImpl implements OrderService {
         } else {
             throw new ImoocMallException(ImoocMallExceptionEnum.FINISH_WRONG_ORDER_STATUS);
         }
+    }
+
+    @Override
+    public List<Order> getUnpaidOrders() {
+        Date curTime = new Date();
+        Date endTime = DateUtils.addDays(curTime, -1);
+        Date begTime = DateUtils.addMinutes(endTime, -5);
+        return orderMapper.selectUnpaidOrders(begTime, endTime);
     }
 }
