@@ -5,11 +5,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @SpringBootApplication
 @MapperScan(basePackages = "com.slwer.cloud.mall.practice.cartorder.model.dao")
-@EnableRedisHttpSession
+//@EnableRedisHttpSession
 @EnableFeignClients
 @ComponentScan({"com.slwer.cloud.mall.practice.cartorder","com.slwer.cloud.mall.practice.common"})
 public class CartOrderApplication {

@@ -4,12 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.zxing.WriterException;
 import com.slwer.cloud.mall.practice.cartorder.feign.ProductFeignClient;
-import com.slwer.cloud.mall.practice.cartorder.feign.UserFeignClient;
+import com.slwer.cloud.mall.practice.cartorder.filter.UserFilter;
 import com.slwer.cloud.mall.practice.cartorder.model.dao.CartMapper;
 import com.slwer.cloud.mall.practice.cartorder.model.dao.OrderItemMapper;
 import com.slwer.cloud.mall.practice.cartorder.model.dao.OrderMapper;
 import com.slwer.cloud.mall.practice.cartorder.model.pojo.Order;
 import com.slwer.cloud.mall.practice.cartorder.model.pojo.OrderItem;
+import com.slwer.cloud.mall.practice.cartorder.model.pojo.Product;
 import com.slwer.cloud.mall.practice.cartorder.model.request.CreateOrderReq;
 import com.slwer.cloud.mall.practice.cartorder.model.vo.CartVO;
 import com.slwer.cloud.mall.practice.cartorder.model.vo.OrderItemVO;
@@ -18,7 +19,6 @@ import com.slwer.cloud.mall.practice.cartorder.service.CartService;
 import com.slwer.cloud.mall.practice.cartorder.service.OrderService;
 import com.slwer.cloud.mall.practice.cartorder.util.OrderCodeFactory;
 import com.slwer.cloud.mall.practice.cartorder.util.PageUtils;
-import com.slwer.cloud.mall.practice.categoryproduct.model.pojo.Product;
 import com.slwer.cloud.mall.practice.common.common.Constant;
 import com.slwer.cloud.mall.practice.common.exception.ImoocMallException;
 import com.slwer.cloud.mall.practice.common.exception.ImoocMallExceptionEnum;
@@ -55,9 +55,6 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     OrderItemMapper orderItemMapper;
 
-    @Resource
-    UserFeignClient userFeignClient;
-
     @Value("${file.upload.dir}")
     String FILE_UPLOAD_DIR;
 
@@ -71,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String create(CreateOrderReq createOrderReq) {
         //拿到用户 ID
-        Integer userId = userFeignClient.getUser().getId();
+        Integer userId = UserFilter.userThreadLocal.get().getId();
         //从购物车查找已经勾选的商品
         List<CartVO> cartVOList = cartService.list(userId);
         ArrayList<CartVO> cartVOListTemp = new ArrayList<>();
@@ -175,7 +172,7 @@ public class OrderServiceImpl implements OrderService {
             throw new ImoocMallException(ImoocMallExceptionEnum.NO_ORDER);
         }
         //订单存在还需要判断所属
-        Integer userId = userFeignClient.getUser().getId();
+        Integer userId = UserFilter.userThreadLocal.get().getId();
         if (!order.getUserId().equals(userId)) {
             throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
         }
@@ -200,7 +197,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageInfo<OrderVO> listForCustomer(Integer pageNum, Integer pageSize) {
-        Integer userId = userFeignClient.getUser().getId();
+        Integer userId = UserFilter.userThreadLocal.get().getId();
 
         PageHelper.startPage(pageNum, pageSize);
         List<Order> orderList = orderMapper.selectOrderForCustomer(userId);
@@ -237,7 +234,7 @@ public class OrderServiceImpl implements OrderService {
         }
         //订单存在还需要判断所属
         if (!isFromSystem) {
-            Integer userId = userFeignClient.getUser().getId();
+            Integer userId = UserFilter.userThreadLocal.get().getId();
             if (!order.getUserId().equals(userId)) {
                 throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
             }
@@ -322,7 +319,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //如果是普通用户，要校验订单所属
-        if (userFeignClient.getUser().getRole().equals(1) && !order.getUserId().equals(userFeignClient.getUser().getId())) {
+        if (UserFilter.userThreadLocal.get().getRole().equals(1) && !order.getUserId().equals(UserFilter.userThreadLocal.get().getId())) {
             throw new ImoocMallException(ImoocMallExceptionEnum.NOT_YOUR_ORDER);
         }
         //发货后可以完结订单
