@@ -23,11 +23,11 @@ import com.slwer.cloud.mall.practice.common.common.Constant;
 import com.slwer.cloud.mall.practice.common.exception.ImoocMallException;
 import com.slwer.cloud.mall.practice.common.exception.ImoocMallExceptionEnum;
 import com.slwer.cloud.mall.practice.common.util.QRCodeGenerator;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -64,7 +64,8 @@ public class OrderServiceImpl implements OrderService {
     @Value("${file.upload.uri.scheme}")
     String scheme;
 
-    @Transactional(rollbackFor = Exception.class)
+    //@Transactional(rollbackFor = Exception.class)
+    @GlobalTransactional
     @Override
     public String create(CreateOrderReq createOrderReq) {
         //拿到用户 ID
