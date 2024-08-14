@@ -15,6 +15,7 @@ import com.slwer.cloud.mall.practice.cartorder.model.request.CreateOrderReq;
 import com.slwer.cloud.mall.practice.cartorder.model.vo.CartVO;
 import com.slwer.cloud.mall.practice.cartorder.model.vo.OrderItemVO;
 import com.slwer.cloud.mall.practice.cartorder.model.vo.OrderVO;
+import com.slwer.cloud.mall.practice.cartorder.mq.MsgSender;
 import com.slwer.cloud.mall.practice.cartorder.service.CartService;
 import com.slwer.cloud.mall.practice.cartorder.service.OrderService;
 import com.slwer.cloud.mall.practice.cartorder.util.OrderCodeFactory;
@@ -26,6 +27,7 @@ import com.slwer.cloud.mall.practice.common.util.QRCodeGenerator;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -54,6 +56,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     OrderItemMapper orderItemMapper;
+
+    @Autowired
+    MsgSender msgSender;
 
     @Value("${file.upload.dir}")
     String FILE_UPLOAD_DIR;
@@ -247,6 +252,15 @@ public class OrderServiceImpl implements OrderService {
             orderMapper.updateByPrimaryKeySelective(order);
         } else {
             throw new ImoocMallException(ImoocMallExceptionEnum.CANCEL_WRONG_ORDER_STATUS);
+        }
+
+        //恢复商品库存
+        //获取订单对应的orderItemList
+        List<OrderItem> orderItemList = orderItemMapper.selectByOrderNo(order.getOrderNo());
+        for (OrderItem orderItem : orderItemList) {
+            Product product = productFeignClient.detailForFeign(orderItem.getProductId());
+            int stock = product.getStock() + orderItem.getQuantity();
+            msgSender.send(product.getId(), stock);
         }
     }
 
